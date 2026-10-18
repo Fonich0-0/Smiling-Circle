@@ -19,7 +19,8 @@ function App() {
 
         try {
             // Переносим всю логику обработки ответа ВНУТРЬ try, чтобы response был доступен
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/login/`, {
+            const apiUrl = new URL('api/v1/auth/login/', import.meta.env.VITE_API_URL).href;
+            fetch(apiUrl,  {
                 method: 'POST', 
                 credentials: 'include',
                 headers: {
