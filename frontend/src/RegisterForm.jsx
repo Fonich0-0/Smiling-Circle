@@ -15,7 +15,7 @@ function App() {
             setError(''); // Сбрасываем прошлую ошибку
 
             try {
-                const apiUrl = new URL('api/v1/auth/registration/', import.meta.env.VITE_API_URL).href;
+                const apiUrl = new URL('api/v1/registration/', import.meta.env.VITE_API_URL).href;
                 fetch(apiUrl,  { 
                     method: 'POST',
                     credentials: 'include',
