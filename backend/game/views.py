@@ -74,8 +74,10 @@ class RegisterView(APIView):
             }, status=status.HTTP_201_CREATED)
 
             # Устанавливаем куки в ответ
-            response.set_cookie(key='access', value=str(refresh.access_token), httponly=True, samesite='Lax')
-            response.set_cookie(key='refresh', value=str(refresh), httponly=True, samesite='Lax')
+            # Устанавливаем куки в ответ (ИСПРАВЛЕНО для работы cross-site)
+            response.set_cookie(key='access', value=str(refresh.access_token), httponly=True, samesite='None', secure=True)
+            response.set_cookie(key='refresh', value=str(refresh), httponly=True, samesite='None', secure=True)
+
 
             return response
 
@@ -112,8 +114,10 @@ class LoginView(APIView):
 
             response = Response({'message': 'Вход выполнен успешно!'}, status=status.HTTP_200_OK)
 
-            response.set_cookie(key='access', value=access_token, httponly=True, samesite='Lax')
-            response.set_cookie(key='refresh', value=refresh_token, httponly=True, samesite='Lax')
+            # Устанавливаем куки в ответ (ИСПРАВЛЕНО для работы cross-site)
+            response.set_cookie(key='access', value=access_token, httponly=True, samesite='None', secure=True)
+            response.set_cookie(key='refresh', value=refresh_token, httponly=True, samesite='None', secure=True)
+
 
             return response
         else:

@@ -25,11 +25,6 @@ SECRET_KEY = 'django-insecure-%a31r-yf=v^#s^a_tr-oild6%i$kw2n*)g1doj$2)t#vgxqoe-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '://onrender.com',  # Точный домен вашего бэкенда на Render без https:// и без слэша!
-]
 
 
 
@@ -152,3 +147,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",            # Для тестов фронтенда локально
     "https://onrender.com" # Полный URL бэкенда на Render (с https://)
 ]
+
+# Финал: принудительно перезаписываем хосты в самом конце загрузки настроек
+ALLOWED_HOSTS = ['*']

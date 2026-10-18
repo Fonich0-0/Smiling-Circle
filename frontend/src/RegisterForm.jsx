@@ -10,13 +10,15 @@ function App() {
     const [error, setError] = useState('')
     const navigate = useNavigate()
 
-        const handleSubmit = async (event) => { 
+                const handleSubmit = async (event) => { 
             event.preventDefault();
             setError(''); // Сбрасываем прошлую ошибку
 
             try {
                 const apiUrl = new URL('api/v1/registration/', import.meta.env.VITE_API_URL).href;
-                fetch(apiUrl,  { 
+                
+                // ИСПРАВЛЕНО: добавили const response = await перед fetch
+                const response = await fetch(apiUrl, { 
                     method: 'POST',
                     credentials: 'include',
                     headers: {
@@ -29,23 +31,28 @@ function App() {
                     })
                 });
 
+                // Теперь response существует, и мы дождёмся ответа от сервера!
                 const data = await response.json();
 
                 if (response.ok) {
-                    localStorage.setItem('isAuthenticated', 'true'); // Фиксируем вход
-                    window.location.href = '/main-menu'; // Перезагружаем страницу в главное меню
-                } 
-                else {
-                    const errorText = data.detail || JSON.stringify(data);
-                    setError(errorText);
+                    localStorage.setItem('isAuthenticated', 'true');
+                    window.location.href = '/main-menu';
+                } else {
+                    // Django возвращает ошибки по полям, например: { password: ["Строка ошибки..."] }
+                    let errorText = '';
+                    if (data.detail) {
+                        errorText = data.detail;
+                    } else {
+                        // Склеиваем ошибки полей в одну понятную строку
+                        errorText = Object.entries(data)
+                            .map(([field, msgs]) => `${field}: ${msgs.join(' ')}`)
+                            .join(' | ');
+                    }
+                    setError(errorText || 'Ошибка валидации данных');
                     console.error('Ошибка от сервера:', data);
                 }
-            }
-            catch (error) {
-                setError('Не удалось связаться с сервером.');
-                console.error('Сетевая ошибка:', error);
-            };
-        } 
+
+
     
     return (
     <form className="form" onSubmit={handleSubmit}>

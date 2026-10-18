@@ -13,25 +13,27 @@ function App() {
     
     const navigate = useNavigate(); // Создаем функцию-навигатор
 
-    const handleSubmit = async (event) => { 
+        const handleSubmit = async (event) => { 
         event.preventDefault(); // Отменяем перезагрузку страницы
         setError(''); // Сбрасываем прошлую ошибку
 
         try {
-            // Переносим всю логику обработки ответа ВНУТРЬ try, чтобы response был доступен
             const apiUrl = new URL('api/v1/login/', import.meta.env.VITE_API_URL).href;
-            fetch(apiUrl,  {
+            
+            // ИСПРАВЛЕНО: Сохраняем результат fetch в константу response и ждём выполнения через await
+            const response = await fetch(apiUrl,  {
                 method: 'POST', 
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: email,
+                    username: email, // Django REST обычно ожидает поле username
                     password: password
                 })
             });
 
+            // Теперь response существует, считываем json
             const data = await response.json();
 
             if (response.ok) {
@@ -40,15 +42,16 @@ function App() {
                 window.location.href = '/main-menu'; // Перезагружаем страницу в главное меню
             } else {
                 // Если сервер вернул ошибку (например, "Неверный пароль")
-                setError(data.error || 'Произошла ошибка при входе');
-                console.error('Ошибка от сервера:', data.error);
+                setError(data.error || data.detail || 'Произошла ошибка при входе');
+                console.error('Ошибка от сервера:', data);
             }
 
         } catch (err) {
             setError('Не удалось связаться с сервером. Проверь, запущен ли Django.');
             console.error('Сетевая ошибка:', err);
         }
-    } 
+    }
+
 
     return (
         // Добавляем onSubmit на форму, чтобы отправка срабатывала и по кнопке, и по Enter
