@@ -26,8 +26,11 @@ SECRET_KEY = 'django-insecure-%a31r-yf=v^#s^a_tr-oild6%i$kw2n*)g1doj$2)t#vgxqoe-
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '.onrender.com'
+    'localhost',
+    '127.0.0.1',
+    '://onrender.com',  # Точный домен вашего бэкенда на Render без https:// и без слэша!
 ]
+
 
 
 # Application definition
@@ -138,10 +141,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-# Разрешаем запросы 
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://smiling-circle.vercel.app"
+    "http://localhost:5173",  # Для локальных тестов React
+    "https://smiling-circle.vercel.app",  # Точный адрес вашего фронтенда с Vercel (без слэша на конце!)
 ]
 CORS_ALLOW_CREDENTIALS = True
 
