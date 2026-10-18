@@ -1,0 +1,86 @@
+# Vagrant & VirtualBox
+.vagrant/
+*.vbox
+*.vbox-prev
+*.vmdk
+*.vdi
+*.vhd
+*.hdd
+
+# VMware
+*.log
+*.vmdk
+*.nvram
+*.vmsd
+*.vmxf
+*.vmem
+*.vmsn
+
+# Docker / Сборка контейнеров
+.docker/
+Dockerfiles/
+*.tar
+*.tar.gz
+
+# ОКРУЖЕНИЯ И ЗАВИСИМОСТИ (Python / JS)
+# Python (Виртуальные окружения)
+venv/
+.venv/
+env/
+.env/
+ENV/
+pyenv/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# JavaScript / Node (Фронтенд)
+node_modules/
+/dist
+/build
+.eslintcache
+.turbo/
+.vercel/
+
+# Логи Node.js
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Rust
+**/target/
+**/*.rs.bk
+Cargo.lock
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.history/
+*.code-workspace
+
+# JetBrains (PyCharm, RustRover, WebStorm)
+.idea/
+*.iws
+*.iml
+
+# Секреты
+.env
+.env.local
+.env.*.local
+*.db
+*.sqlite
+*.sqlite3
+
+# Система
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Другое
+*.exe
+*.pdb

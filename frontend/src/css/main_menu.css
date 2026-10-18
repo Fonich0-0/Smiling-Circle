@@ -1,0 +1,308 @@
+.background {
+  /* Твоя палитра */
+  --stone-800: #2e2727;
+  --orange-main: #ff8800;
+  --yellow-light: #fff1b1; 
+  
+  background-color: #ffcc00;
+  /* Убираем стандартную рамку */
+  border: none;
+  user-select: none;
+
+  /* Позиционирование: растягиваем фон на весь экран */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;  /* 100% ширины экрана */
+  height: 100vh; /* 100% высоты экрана */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;     /* Центрируем кнопки по горизонтали */
+  justify-content: center;    /* Центрируем кнопки по вертикали */
+  gap: 20px;               /* Отступ между твоими кнопками */
+
+  box-shadow:
+    /* Жирная пиксельная рамка ВНУТРИ экрана по краям (6px) */
+    inset  6px 0 0 var(--stone-800),
+    inset 0 -6px 0 0 var(--stone-800),
+    inset -6px 0 0 0 var(--stone-800),
+    inset 6px 0 0 0 var(--stone-800),
+    
+    /* Твой блик и тень, смещенные чуть глубже (на 12px от края) */
+    inset 0 25px 0 var(--yellow-light),
+    inset 0 -25px 0 var(--orange-main);
+    
+  z-index: 1; /* Чтобы фон был под кнопками, но над остальным */
+
+}
+
+.background::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* СУПЕР-СВОЙСТВО: сквозь эту рамку можно будет кликать по кнопкам! */
+  pointer-events: none; 
+  
+  z-index: 10; /* Гарантирует, что рамка всегда будет на самом переднем плане */
+}
+
+.styled-wrapper {
+  --stone-50: #fafaf9;
+  --stone-800: #292524;
+  --yellow-300: #fde047;
+  --yellow-400: #facc15;
+  --yellow-500: #eab308;
+  --black-25: rgba(0, 0, 0, 0.25);
+
+  position: fixed;
+  bottom: 30px;      /* Отступ снизу */
+  right: 30px;       /* Отступ справа */
+  z-index: 1000;
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  cursor: pointer;
+
+  & > button {
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    appearance: none;
+    border: 2px solid var(--stone-800);
+    border-radius: 0.25rem;
+    background-color: var(--yellow-400);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--yellow-300);
+    }
+
+    &:checked {
+      background-color: var(--stone-800);
+      border-color: var(--stone-800);
+
+      &:hover {
+        background-color: #44403c;
+      }
+    }
+
+    &:active {
+      outline-color: var(--stone-800);
+    }
+
+    &:focus-visible {
+      outline-color: var(--stone-800);
+      outline-style: dashed;
+    }
+  }
+
+  & > span:nth-child(2) {
+    position: absolute;
+    inset: 3px;
+    pointer-events: none;
+    background-color: var(--yellow-400);
+    border-bottom: 2px solid var(--black-25);
+    transition: transform 75ms;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(
+          rgb(255 255 255 / 80%) 20%,
+          transparent 20%
+        ),
+        radial-gradient(rgb(255 255 255 / 100%) 20%, transparent 20%);
+      background-position:
+        0 0,
+        4px 4px;
+      background-size: 8px 8px;
+      mix-blend-mode: hard-light;
+      opacity: 0.5;
+      animation: dots 0.5s infinite linear;
+    }
+  }
+
+  & > span:nth-child(3) {
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+
+    &::before {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      position: absolute;
+      top: 0.3rem;
+      left: 0.3rem;
+      background-color: var(--stone-800);
+      border-radius: 0.125rem;
+      box-shadow:
+        5em 0 var(--stone-800),
+        0 5em var(--stone-800),
+        5em 5em var(--stone-800);
+    }
+  }
+
+  & > span:nth-child(4) {
+    position: absolute;
+    pointer-events: none;
+    inset: 0;
+    filter: drop-shadow(0.25em 0.25em 0 rgba(0, 0, 0, 0.2));
+    transition: all 75ms;
+
+    &::after {
+      content: "";
+      width: 0.5rem;
+      height: 0.3rem;
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      border-radius: 0.0625px;
+      background-color: var(--stone-800);
+      box-shadow:
+        0.75em 2em var(--stone-800),
+        1em 2em var(--stone-800),
+        0.75em 1.75em var(--stone-800),
+        1em 1.75em var(--stone-800),
+        0.75em 1.25em var(--stone-800),
+        1em 1.25em var(--stone-800),
+        0.75em 1em var(--stone-800),
+        1em 1em var(--stone-800),
+        1em 0.75em var(--stone-800),
+        1.5em 0.75em var(--stone-800),
+        1.25em 0.75em var(--stone-800),
+        1.25em -0.25em var(--stone-800),
+        1.5em 0em var(--stone-800),
+        1.25em 0.5em var(--stone-800),
+        1.5em 0.5em var(--stone-800),
+        1.25em 0.25em var(--stone-800),
+        1.5em 0.25em var(--stone-800),
+        1.25em 0 var(--stone-800),
+        1em -0.25em var(--stone-800),
+        0.75em -0.25em var(--stone-800),
+        0.5em -0.25em var(--stone-800),
+        0.25em -0.25em var(--stone-800),
+        0.25em 0 var(--stone-800),
+        0 0.25em var(--stone-800),
+        0 0.5em var(--stone-800),
+        0.25em 0.25em var(--stone-800),
+        0.25em 0.5em var(--stone-800);
+    }
+  }
+
+  & > span:nth-child(5) {
+    position: absolute;
+    background-color: var(--yellow-400);
+    border: 2px solid var(--stone-800);
+    border-radius: 0.75rem;
+    pointer-events: none;
+    z-index: -1;
+    inset: 0.5rem 1.5rem;
+    box-shadow:
+      7px 0 0 0 var(--stone-800),
+      inset 0 2px 0 0 var(--yellow-300),
+      inset 0 -2px 0 0 var(--yellow-500);
+    transition: all 0ms cubic-bezier(0, 0.5, 0.4, 1);
+  }
+
+  & button:active ~ span:nth-child(5) {
+    transform: translateY(-200%);
+    transition-duration: 200ms;
+    opacity: 0;
+  }
+
+  & button:hover ~ span:nth-child(4) {
+    filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
+  }
+}
+
+@keyframes dots {
+  0% {
+    background-position:
+      0 0,
+      4px 4px;
+  }
+  100% {
+    background-position:
+      8px 0,
+      12px 4px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .styled-wrapper {
+    & button:active,
+    & button:focus-visible {
+      outline-color: var(--yellow-400);
+    }
+  }
+}
+
+
+
+.start {
+  /* Твоя палитра */
+  --stone-800: #000000;
+  --orange-main: #ff8800; 
+  --yellow-light: #ffe369; 
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 32px;
+  
+  background-color: #ffcc00;
+  color: #ffffff;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: uppercase;
+  cursor: pointer;
+  
+  /* Убираем стандартную рамку */
+  border: none;
+  user-select: none;
+
+  /* ВОТ И ВСЯ ПИКСЕЛЬНАЯ МАГИЯ (Тень рисует рамку за нас) */
+  box-shadow:
+    /* Жирная черная пиксельная рамка вокруг кнопки (толщина 8px) */
+    0 -6px 0 0 var(--stone-800),
+    0 6px 0 0 var(--stone-800),
+    -6px 0 0 0 var(--stone-800),
+    6px 0 0 0 var(--stone-800),
+    
+    /* Внутренний желтый блик сверху (6px) и черная тень снизу (6px) */
+    inset 0 6px 0 var(--yellow-light),
+    inset 0 -6px 0 var(--orange-main);
+}
+
+.account {
+  position: absolute;
+  background-color: #fff8d2;
+  top: 0;
+  left: 0;
+  margin: 18px;
+  bottom: 30px;      /* Отступ снизу */
+  right: 30px;       /* Отступ справа */
+  z-index: 1000;
+  display: block;
+  width: 25rem;
+  height: 5rem;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.start:active {
+  /* Эффект нажатия */
+  transform: translateY(4px);
+}
