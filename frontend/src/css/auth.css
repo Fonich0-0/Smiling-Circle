@@ -1,146 +1,225 @@
-/* Оживляем контейнеры React и центрируем нашу форму на экране */
+/* 1. Настройка главного контейнера и центрирование */
 html, body, #root {
-  height: 100%;
   margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh; /* Используем min-height вместо строгого height */
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Центр по горизонтали */
-  align-items: center;     /* Центр по вертикали */
-  background-color: #1a1a1a; /* Мягкий фон для страницы вокруг формы */
+  justify-content: center; /* Центр по ВЕРТИКАЛИ */
+  align-items: center;     /* Центр по ГОРИЗОНТАЛИ */
+  background-color: rgb(198, 241, 255); 
+  font-family: sans-serif; /* Добавили приятный шрифт по умолчанию */
 }
 
+/* Глобальный сброс, чтобы padding и border не ломали размеры элементов */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. Контейнер для картинки и формы */
 .auth-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Центрируем картинку ровно по центру над формой */
-  
-  /* МАГИЯ: Тянем весь контейнер (и картинку, и форму вместе) наверх */
-  margin-top: -100px; 
+  align-items: center; 
+  gap: 20px; /* Красивый отступ */
+  width: 100%;
+  padding: 20px; /* Чтобы форма не прилипала к краям экрана на смартфонах */
 }
 
-
+/* Форма (теперь она адаптивная) */
 .form {
+  width: 100%;          /* На мобилках займет всю доступную ширину... */
+  max-width: 400px;     /* ...но на компьютерах не станет шире 400px */
+  height: auto;         /* Высота подстраивается под контент, никакой деформации */
+  
+  --input-focus: #60adff;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: beige;
+  --main-color: black;
+  
+  padding: 30px;
+  background: lightblue;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background-color: #ffffff;
-  padding: 30px;
-  width: 450px;
-  margin-top: -60px; 
-
-  border-radius: 55px;
-  background: linear-gradient(145deg);
-  box-shadow:  27px 27px 50px #898989,
-              -27px -27px 50px #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  align-items: stretch; /* Растягиваем инпуты по ширине формы */
+  gap: 20px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
 }
 
-::placeholder {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+/* 4. Заголовки */
+.title {
+  color: var(--font-color);
+  font-weight: 900;
+  font-size: 22px;
+  margin: 0 0 10px 0;
+  text-align: center; /* Центрируем заголовок */
 }
 
-.form button {
-  align-self: flex-end;
-  border: 1.5px solid #ecedec;
-}
-
-.flex-column > label {
-  color: #151717;
+.title span {
+  display: block; /* Переносим подзаголовок на новую строку */
+  color: var(--font-color-sub);
   font-weight: 600;
-}
-
-.inputForm {
-  border: 1.5px solid #ecedec;
-  border-radius: 10px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  transition: 0.2s ease-in-out;
+  font-size: 15px;
+  margin-top: 5px;
 }
 
 .input {
-  margin-left: 10px;
-  border-radius: 10px;
-  border: none;
-  width: 100%;
-  height: 100%;
+  width: 100%; /* Теперь инпут подстраивается под размер формы */
+  height: 45px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--font-color);
+  padding: 5px 15px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--font-color-sub);
+  opacity: 0.8;
 }
 
 .input:focus {
-  outline: none;
+  border: 2px solid var(--input-focus);
+  box-shadow: 2px 2px var(--input-focus);
 }
 
-.inputForm:focus-within {
-  border: 1.5px solid #2d79f3;
-}
-
-.flex-row {
+/* 6. Кнопки социальных сетей */
+.login-with {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
+  justify-content: center; /* Центрируем кнопки соцсетей */
+  gap: 15px;
+  margin: 10px 0;
 }
 
-.flex-row > div > label {
-  font-size: 14px;
-  color: black;
-  font-weight: 400;
-}
-
-.span {
-  font-size: 14px;
-  margin-left: 5px;
-  color: #2d79f3;
-  font-weight: 500;
+.button-log {
   cursor: pointer;
-}
-
-.button-submit {
-  border-radius: 40px;
-  background: linear-gradient(145deg);
-  box-shadow:  27px 27px 50px #898989,
-              -27px -27px 50px #ffffff;
-
-  margin: 20px 0 10px 0;
-  background-color: #151717;
-  border: none;
-  color: white;
-  font-size: 15px;
-  font-weight: 500;
-  height: 50px;
-  width: 100%;
-  cursor: pointer;
-}
-
-.p {
-  text-align: center;
-  color: black;
-  font-size: 14px;
-  margin: 5px 0;
-}
-
-.btn {
-  margin-top: 10px;
-  width: 100%;
-  height: 50px;
-  border-radius: 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  color: var(--font-color);
+  font-size: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: 500;
-  gap: 10px;
-  border: 1px solid #ededef;
-  background-color: white;
+  transition: all 0.1s ease;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: var(--main-color);
+}
+
+.just-button {
+  margin: 5px auto 0 auto; /* Центрируем саму кнопку */
+  width: 50%;              
+  max-width: 170px;         /* Но ограничиваем, чтобы не была слишком длинной */
+  height: 35px;
+  border-radius: 6px;
+  border: 3px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 2px 2px var(--main-color);
+  font-size: 14px;
+  font-weight: 625;
+  color: var(--font-color);
   cursor: pointer;
-  transition: 0.2s ease-in-out;
+  transition: all 0.1s ease;
 }
 
-.btn:hover {
-  border: 1px solid #2d79f3;
+.button {
+  margin: 15px auto 0 auto; /* Центрируем саму кнопку */
+  width: 30%;              
+  max-width: 170px;         /* Но ограничиваем, чтобы не была слишком длинной */
+  height: 35px;
+  border-radius: 6px;
+  border: 3px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 3px 3px var(--main-color);
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--font-color);
+  cursor: pointer;
+  transition: all 0.1s ease;
 }
 
-    
+.button-confirm {
+  margin: 15px auto 0 auto; /* Центрируем саму кнопку */
+  width: 100%;              /* Делаем ее на всю ширину формы */
+  max-width: 200px;         /* Но ограничиваем, чтобы не была слишком длинной */
+  height: 45px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--font-color);
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
 
-    
+/* Анимация клика для ВСЕХ кнопок (эффект нажатия комикса) */
+.button-log:active, .button-confirm:active {
+  box-shadow: 0px 0px var(--main-color);
+  transform: translate(4px, 4px);
+}
+
+.remember-me-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  user-select: none; /* Чтобы текст не выделялся случайно при клике */
+}
+
+/* Стилизуем сам чекбокс под общий стиль формы */
+.checkbox-input {
+  appearance: none; /* Убираем стандартный скучный дизайн браузера */
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--main-color);
+  border-radius: 4px;
+  background-color: var(--bg-color);
+  box-shadow: 2px 2px var(--main-color);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.1s ease;
+}
+
+/* Эффект при клике (галочка) */
+.checkbox-input:checked {
+  background-color: var(--input-focus);
+}
+
+/* Рисуем белую галочку внутри при активации */
+.checkbox-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Анимация нажатия */
+.checkbox-input:active {
+  box-shadow: 0px 0px var(--main-color);
+  transform: translate(2px, 2px);
+}
