@@ -19,13 +19,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
+from dotenv import load_dotenv
+load_dotenv()  # читает .env и кладёт значения в os.environ
+import os
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%a31r-yf=v^#s^a_tr-oild6%i$kw2n*)g1doj$2)t#vgxqoe-'
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG") == "1" # о значит: «бери ключ из переменной окружения, а DEBUG включай, только если там явно стоит 1»
 
-
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -52,8 +56,8 @@ REST_FRAMEWORK = {
 # Настройки времени жизни токенов (опционально)
 from datetime import timedelta
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
 }
 
@@ -98,6 +102,20 @@ DATABASES = {
     }
 }
 
+import os
+
+# Проверяем, есть ли переменная от Render. Если нет — включаем локальный Redis
+REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379")
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
+    }
+}
+
+
+HTTP_X_FORWARDED_FOR = 'HTTP_X_FORWARDED_FOR' 
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -145,8 +163,9 @@ CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",            # Для тестов фронтенда локально
-    "https://onrender.com" # Полный URL бэкенда на Render (с https://)
+    "https://smiling-circle.vercel.app", # фронтенд
+    "http://localhost:8000", # бэкенд для тестов
+    "https://smiling-circle-game-cf5l.onrender.com" # Полный URL бэкенда на Render (с https://)
 ]
 
-# Финал: принудительно перезаписываем хосты в самом конце загрузки настроек
-ALLOWED_HOSTS = ['*']
+

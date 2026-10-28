@@ -28,8 +28,9 @@ function App() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username: email, // Django REST обычно ожидает поле username
-                    password: password
+                    email: email, 
+                    password: password,
+                    remember: remember
                 })
             });
 
@@ -86,7 +87,7 @@ function App() {
                     <button type="button" className="just-button" onClick={() => navigate('/login')}><span className="span">Forgot password?</span></button>
                 </div>
                 
-                <p><span>You don't have an account?</span> <button type='button' className="button" onClick={() => navigate('/register')}><span className="span">Sign In</span></button></p>
+                <p><span>You don't have an account?</span> <button type='button' className="button" onClick={() => navigate('/register')}><span className="span">Sign Up</span></button></p>
             </div>
 
             <button type='submit' className="button-confirm">Let`s go →</button>

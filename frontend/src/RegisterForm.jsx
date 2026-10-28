@@ -27,7 +27,8 @@ function App() {
                 body: JSON.stringify({
                     username: username,
                     email: email,
-                    password: password
+                    password: password,
+                    remember: remember
                 })
             });
 
@@ -90,7 +91,7 @@ function App() {
                     <label htmlFor="remember" className="checkbox-label">remember me</label>
                 </div>
                 
-                <p><span>You have an account?</span> <button type="button" className="button" onClick={() => navigate('/login')}><span className="span">Sign Up</span></button></p>
+                <p><span>You have an account?</span> <button type="button" className="button" onClick={() => navigate('/login')}><span className="span">Sign In</span></button></p>
             </div>
 
             <button type="submit" className="button-confirm">Let`s go →</button>
