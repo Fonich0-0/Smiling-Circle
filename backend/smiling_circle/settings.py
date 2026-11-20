@@ -31,6 +31,12 @@ DEBUG = os.environ.get("DJANGO_DEBUG") == "1" # о значит: «бери кл
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 
+# PostgreSQL:
+POSTGRES_DB=os.environ["POSTGRES_DB"]
+POSTGRES_USER=os.environ["POSTGRES_USER"]
+POSTGRES_PASSWORD=os.environ["POSTGRES_PASSWORD"]
+POSTGRES_HOST=os.environ["POSTGRES_HOST"]
+POSTGRES_PORT=os.environ["POSTGRES_PORT"]
 
 # Application definition
 
@@ -95,12 +101,32 @@ WSGI_APPLICATION = 'smiling_circle.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import dj_database_url
+
+if os.getenv('DATABASE_URL'):
+    # Если ссылка (Neon), 
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_health_checks=True,
+            ssl_require=True,
+            
+        )
     }
-}
+else:
+    # Если ссылки нет, подключаемся по отдельным параметрам
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+            'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        }
+    }
+
+
 
 import os
 
