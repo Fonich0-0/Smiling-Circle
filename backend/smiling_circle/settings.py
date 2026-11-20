@@ -32,11 +32,11 @@ DEBUG = os.environ.get("DJANGO_DEBUG") == "1" # о значит: «бери кл
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 # PostgreSQL:
-POSTGRES_DB=os.environ["POSTGRES_DB"]
-POSTGRES_USER=os.environ["POSTGRES_USER"]
-POSTGRES_PASSWORD=os.environ["POSTGRES_PASSWORD"]
-POSTGRES_HOST=os.environ["POSTGRES_HOST"]
-POSTGRES_PORT=os.environ["POSTGRES_PORT"]
+# POSTGRES_DB=os.environ["POSTGRES_DB"]
+# POSTGRES_USER=os.environ["POSTGRES_USER"]
+# POSTGRES_PASSWORD=os.environ["POSTGRES_PASSWORD"]
+# POSTGRES_HOST=os.environ["POSTGRES_HOST"]
+# POSTGRES_PORT=os.environ["POSTGRES_PORT"]
 
 # Application definition
 
@@ -97,8 +97,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smiling_circle.wsgi.application'
 
+######
+# Database    
 
-# Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 import dj_database_url
