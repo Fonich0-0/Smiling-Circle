@@ -1,3 +1,5 @@
+import os
+from django.core.management import call_command
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Player
@@ -16,6 +18,10 @@ from django_ratelimit.decorators import ratelimit
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from .serializers import RegisterSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.views import TokenRefreshView
+
 
 
 # <---------->_APIView_<---------->
@@ -29,6 +35,85 @@ from .serializers import RegisterSerializer
 # APIView превращает этот питоновский словарь обратно в JSON-строку, добавляет правильные технические 
 # заголовки и отправляет этот ответ назад в браузер
 # <---------->_APIView_<---------->
+
+def login_ratelimit_key(group, request):
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(",")[0].strip()
+    else:
+        ip = request.META.get("REMOTE_ADDR")
+
+    # В DRF данные из JSON уже лежат в request.data
+    email = ""
+    if hasattr(request, "data") and isinstance(request.data, dict):
+        email = str(request.data.get("email", "")).strip().lower()
+
+    return f"{ip}:{email}"
+
+class CookieTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        # 1. Достаём refresh из кук запроса (укажите ваше имя куки, если оно отличается)
+        refresh_token = request.COOKIES.get("refresh_token")
+
+        # 2. Если там пусто -> отвечаем 401
+        if not refresh_token:
+            return Response(
+                {"detail": "Refresh token not found in cookies."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        # 3. Передаём его сериализатору в том виде, как тот ждёт (словарь {"refresh": ...})
+        serializer = self.get_serializer(data={"refresh": refresh_token})
+
+        # 4. Сериализатор не принял (токен истёк, невалиден или в чёрном списке) -> 401
+        try:
+            serializer.is_valid(raise_exception=True)
+        except (TokenError, InvalidToken) as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        # 5. Берём из результата новый access (и новый refresh при включённой ротации)
+        access_token = serializer.validated_data.get("access")
+        new_refresh_token = serializer.validated_data.get("refresh")
+
+        # 6. Собираем ответ БЕЗ токенов в теле
+        response = Response({"detail": "Tokens refreshed"}, status=status.HTTP_200_OK)
+
+        # 7. Кладём токены в куки так же, как в create_tokens
+        # Подставьте сюда вызов вашей функции/метода установки кук, например:
+        # set_auth_cookies(response, access_token, new_refresh_token)
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite="None",  # или "Lax", в зависимости от настроек в create_tokens
+        )
+        if new_refresh_token:
+            response.set_cookie(
+                key="refresh_token",
+                value=new_refresh_token,
+                httponly=True,
+                secure=True,
+                samesite="None",
+            )
+
+        # 8. Возвращаем ответ
+        return response
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) 
+def flush_tokens_webhook(request):
+    # Достаём пароль из заголовка запроса и сверяем с паролем на сервере
+    secret = request.headers.get("X-Cron-Secret")
+    if not secret or secret != os.environ.get("CRON_SECRET"):
+        return Response({"detail": "Доступ запрещён"}, status=403)
+    
+    # Запускаем встроенную команду очистки просроченных токенов
+    call_command("flushexpiredtokens")
+    return Response({"status": "Токены очищены"})
 
 
 class CookieJWTAuthentication(JWTAuthentication):
@@ -57,7 +142,7 @@ def create_tokens(request, response, refresh):
 
 
 # Защита Регистрации (Блокируем только по IP, максимум 3 регистрации в час)
-@method_decorator(ratelimit(key='ip', rate='3/h', block=True), name='post')
+@method_decorator(ratelimit(key=login_ratelimit_key, rate="5/15m", block=True), name="post")
 class RegisterView(APIView):
     permission_classes = [AllowAny] # Пускаем всех без токена
 

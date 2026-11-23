@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
 ]
 
 REST_FRAMEWORK = {
@@ -59,12 +61,15 @@ REST_FRAMEWORK = {
     ),
 }
 
+
+
 # Настройки времени жизни токенов (опционально)
 from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
+    "BLACKLIST_AFTER_ROTATION": True, 
 }
 
 MIDDLEWARE = [
@@ -217,3 +222,15 @@ LOGGING = {
         },
     },
 }
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        # Берём первый IP из цепочки — это реальный адрес пользователя
+        return x_forwarded_for.split(",")[0].strip()
+    return request.META.get("REMOTE_ADDR")
+
+
+RATELIMIT_IP_META_KEY = "smiling_circle.settings.get_client_ip"
+
